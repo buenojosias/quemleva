@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('donation_items', function (Blueprint $table) {
+        Schema::create('promise_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('donation_id')->nullable()->constrained()->nullOnDelete(); // O próprio criador da campanha pode inserir doações de modo avulso
+            $table->foreignId('promise_id')->nullable()->constrained()->nullOnDelete(); // O próprio criador da campanha pode inserir promessas doação de modo avulso
             $table->foreignId('item_id')->constrained()->cascadeOnDelete();
             $table->integer('quantity');
-            $table->string('status', 20)->default('pending'); // pending, confirmed, delivered, canceled | Muda para confirmed automaticamente com o confirmed de donations
+            $table->string('status', 20)->default('pending'); // pending, confirmed, delivered, canceled | Muda para confirmed automaticamente com o confirmed de promises
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('donation_items');
+        Schema::dropIfExists('promise_items');
     }
 };

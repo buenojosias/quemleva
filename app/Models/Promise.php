@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Donation extends Model
+class Promise extends Model
 {
     protected $fillable = [
         'campaign_id',
@@ -36,6 +36,6 @@ class Donation extends Model
 
     public function items(): HasMany
     {
-        return $this->hasMany(DonationItem::class);
+        return $this->hasMany(PromiseItem::class);
     }
 }

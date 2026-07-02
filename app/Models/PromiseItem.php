@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class DonationItem extends Model
+class PromiseItem extends Model
 {
     protected $fillable = [
-        'donation_id',
+        'promise_id',
         'item_id',
         'quantity',
         'status',
@@ -21,9 +21,9 @@ class DonationItem extends Model
         ];
     }
 
-    public function donation(): BelongsTo
+    public function promise(): BelongsTo
     {
-        return $this->belongsTo(Donation::class);
+        return $this->belongsTo(Promise::class);
     }
 
     public function item(): BelongsTo

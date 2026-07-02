@@ -46,8 +46,8 @@ class User extends Authenticatable
         return $this->hasMany(Campaign::class);
     }
 
-    public function donations(): HasMany
+    public function promises(): HasMany
     {
-        return $this->hasMany(Donation::class);
+        return $this->hasMany(Promise::class);
     }
 }

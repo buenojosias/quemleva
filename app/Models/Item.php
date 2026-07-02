@@ -24,6 +24,6 @@ class Item extends Model
 
     public function items(): HasMany
     {
-        return $this->hasMany(DonationItem::class);
+        return $this->hasMany(PromiseItem::class);
     }
 }
