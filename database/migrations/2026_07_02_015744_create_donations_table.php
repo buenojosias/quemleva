@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('donations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('campaign_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete(); // Se a pessoa que vai fazer a doação estiver logada, confirma automaticamente
+            $table->string('donor_name')->nullable(); // Obrigatório se a pessoa não estiver logada
+            $table->string('donor_whatsapp')->nullable(); // Obrigatório se a pessoa não estiver logada, para enviar código de confirmação
+            $table->string('confirmation_code', 6)->nullable(); // Código para a pessoa confirmar a doação, caso não esteja logada
+            $table->boolean('confirmed')->default(false); // Se a pessoa estiver logada, já confirma automaticamente
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('donations');
+    }
+};
