@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "kra8/laravel-snowflake": "^2.5",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
         "livewire/livewire": "^4.0.0",

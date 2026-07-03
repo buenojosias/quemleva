@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Kra8\Snowflake\HasSnowflakePrimary;
 
 class Campaign extends Model
 {
+    use HasSnowflakePrimary;
+    
     protected $fillable = [
         'user_id',
         'name',
