@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('campaign_id')->constrained()->cascadeOnDelete();
+            $table->string('category', 40); // Categoria do item (ex: Comidas, Bebidas, Descartáveis, Higiene, Limpeza) - virá de class Enum
             $table->string('name'); // Nome do item necessário
-            $table->string('unit', 3); // Unidade de medida (ex: kg, un, l) - virá de class Enum
-            $table->integer('quantity'); // Quantidade necessária do item
+            $table->string('unit', 20); // Unidade de medida (ex: kg, un, l) - virá de class Enum
+            $table->integer('required_quantity'); // Quantidade necessária do item
             $table->date('delivery_date')->nullable(); // Data limite para entrega do item específico
             $table->mediumText('note')->nullable(); // Observações adicionais sobre o item
             $table->timestamps();

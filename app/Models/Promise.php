@@ -14,13 +14,13 @@ class Promise extends Model
         'donor_name',
         'donor_whatsapp',
         'confirmation_code',
-        'confirmed',
+        'confirmed_at',
     ];
 
     protected function casts(): array
     {
         return [
-            'confirmed' => 'boolean',
+            'confirmed_at' => 'datetime',
         ];
     }
 

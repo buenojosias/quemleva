@@ -15,6 +15,7 @@ class Campaign extends Model
         'description',
         'confirmation_deadline',
         'delivery_deadline',
+        'is_active',
     ];
 
     protected function casts(): array
@@ -22,6 +23,7 @@ class Campaign extends Model
         return [
             'confirmation_deadline' => 'datetime: d/m/Y',
             'delivery_deadline' => 'datetime: d/m/Y',
+            'is_active' => 'boolean',
         ];
     }
 

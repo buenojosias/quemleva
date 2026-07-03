@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PromiseItemStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -10,14 +11,15 @@ class PromiseItem extends Model
     protected $fillable = [
         'promise_id',
         'item_id',
-        'quantity',
+        'promised_quantity',
         'status',
     ];
 
     protected function casts(): array
     {
         return [
-            'quantity' => 'integer',
+            'promised_quantity' => 'integer',
+            'status' => PromiseItemStatusEnum::class,
         ];
     }
 

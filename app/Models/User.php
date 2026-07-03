@@ -25,7 +25,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'whatsapp',
+        'whatsapp_confirmation_code',
+        'whatsapp_verified_at',
         'password',
+        'google_id',
+        'avatar',
     ];
 
     protected $hidden = [
@@ -37,6 +42,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'whatsapp_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }

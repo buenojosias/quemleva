@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->date('confirmation_deadline'); // Data limite para confirmação da doação
             $table->date('delivery_deadline'); // Data limite para entrega dos itens
+            $table->boolean('is_active')->default(true); // Indica se a campanha está ativa ou não
             $table->timestamps();
         });
     }
