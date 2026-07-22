@@ -2,10 +2,20 @@
 
 namespace App\Livewire\Campaign;
 
+use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
+    
+    #[Computed]
+    public function campaigns()
+    {
+        return auth()->user()->campaigns()->latest()->paginate(10);
+    }
+
     public function render()
     {
         return view('livewire.campaign.index');
