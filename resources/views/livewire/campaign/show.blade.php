@@ -1,0 +1,3 @@
+<div>
+    {{ $campaign->name }}
+</div>

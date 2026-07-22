@@ -2,16 +2,16 @@
 
 namespace App\Livewire\Campaign;
 
-use App\Livewire\Traits\Alert;
 use App\Models\Campaign;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use TallStackUi\Traits\Interactions;
 
 class Create extends Component
 {
-    use Alert;
-
+    use Interactions;
+    
     public ?string $name = null;
 
     public ?string $description = null;
@@ -74,16 +74,17 @@ class Create extends Component
     {
         $validated = $this->validate();
 
-        Campaign::create([
+        $campaign = Campaign::create([
             ...$validated,
             'user_id' => Auth::id(),
         ]);
-
-        $this->dispatch('created');
-
         $this->reset();
-        $this->is_active = true;
 
-        $this->success();
+        $this->toast()
+            ->success('Campanha criada com sucesso!')
+            ->flash()
+            ->send();
+
+        $this->redirectRoute('campaigns.show', [$campaign]);
     }
 }
