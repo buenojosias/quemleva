@@ -30,4 +30,9 @@ return [
     'legacy_model_binding' => true, // Default is false. The starter kit uses the legacy model binding.
 
     // All other configuration options are the same as the default.
+
+    'make_command' => [
+        'type' => 'class',
+        'emoji' => false,
+    ],
 ];

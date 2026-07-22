@@ -60,6 +60,7 @@
                     </div>
                 </x-slot:brand-collapsed>
                 <x-side-bar.item text="Dashboard" icon="home" :route="route('dashboard')" />
+                <x-side-bar.item text="Campanhas" icon="flag" :route="route('campaigns.index')" />
                 <x-side-bar.item text="Users" icon="users" :route="route('users.index')" />
                 <x-side-bar.item text="Welcome Page" icon="arrow-uturn-left" :route="route('welcome')" />
             </x-side-bar>
