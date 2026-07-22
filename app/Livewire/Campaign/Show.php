@@ -15,6 +15,7 @@ class Show extends Component
             ->with(['user', 'items', 'promises', 'promiseItems'])
             ->where('user_id', auth()->id())
             ->findOrFail($campaign);
+        $this->campaign->url = route('campaigns.show', $this->campaign);
     }
 
     public function render()
