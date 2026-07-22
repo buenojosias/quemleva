@@ -2,7 +2,7 @@
     <div class="header">
         <h1>Minhas campanhas</h1>
         <div>
-            <x-button>Criar Campanha</x-button>
+            <livewire:campaign.create />
         </div>
     </div>
     
