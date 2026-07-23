@@ -12,7 +12,7 @@ class Show extends Component
     public function mount($campaign)
     {
         $this->campaign = Campaign::query()
-            ->with(['user', 'items', 'promises', 'promiseItems'])
+            ->with(['user', 'items'])
             ->where('user_id', auth()->id())
             ->findOrFail($campaign);
         $this->campaign->url = route('campaigns.show', $this->campaign);

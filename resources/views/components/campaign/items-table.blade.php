@@ -16,7 +16,7 @@ new class extends Component
 
     public Campaign $campaign;
 
-    public function mount(Campaign $campaign): void
+    public function mount($campaign): void
     {
         $this->campaign = $campaign;
     }

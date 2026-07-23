@@ -35,7 +35,7 @@ class Item extends Model
         return $this->belongsTo(Campaign::class);
     }
 
-    public function items(): HasMany
+    public function promisses(): HasMany
     {
         return $this->hasMany(PromiseItem::class);
     }
