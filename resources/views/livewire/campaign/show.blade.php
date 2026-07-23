@@ -35,10 +35,10 @@
     </x-card>
 
     <div class="flex justify-between items-center my-6 gap-4">
-        <h2 class="text-xl font-semibold">Itens da campanha</h2>
+        <h2 class="text-xl font-semibold dark:text-gray-300">Itens</h2>
         <livewire:item.create :campaign="$campaign" />
     </div>
 
-    <livewire:campaign.items-table :campaign="$campaign" />
+    <livewire:campaign.items-table :campaign="$campaign" paginate />
 
 </div>
