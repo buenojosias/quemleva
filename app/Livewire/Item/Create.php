@@ -18,6 +18,7 @@ class Create extends Component
     public ?string $category = null;
 
     public ?string $name = null;
+    public ?string $complement = null;
 
     public ?string $unit = null;
 
@@ -43,6 +44,11 @@ class Create extends Component
             ],
             'name' => [
                 'required',
+                'string',
+                'max:255',
+            ],
+            'complement' => [
+                'nullable',
                 'string',
                 'max:255',
             ],
@@ -118,6 +124,7 @@ class Create extends Component
 
         $this->reset([
             'name',
+            'complement',
             'unit',
             'required_quantity',
             'delivery_date',

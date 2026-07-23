@@ -39,6 +39,6 @@
         <livewire:item.create :campaign="$campaign" />
     </div>
 
-    <livewire:campaign.items-table :campaign="$campaign" paginate />
+    <livewire:campaign.items-table :campaign="$campaign" />
 
 </div>

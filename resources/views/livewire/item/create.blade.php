@@ -11,7 +11,7 @@
 
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 
-                <x-input label="Complemento" placeholder="Ex.: Pacote de 500g" hint="Opcional" wire:model="note" />
+                <x-input label="Complemento" placeholder="Ex.: Pacote de 500g" hint="Opcional" wire:model="complement" />
 
                 <x-select.native label="Categoria *"
                                  wire:model="category"
@@ -31,12 +31,16 @@
                           wire:model="required_quantity"
                           :min="1"
                           centralized
-                          required />
+                          required
+                          hint="Apenas valores inteiros" />
     
                 <x-date label="Data limite de entrega"
                         wire:model="delivery_date"
                         name="delivery_date"
-                        format="DD/MM/YYYY" />
+                        format="DD/MM/YYYY"
+                        hint="Informe se este item precisar ser entregue antes dos demais" />
+
+                <x-textarea label="Observações" placeholder="Ex.: Manter congelado até a entrega." wire:model="note" />
             </div>
         </form>
 

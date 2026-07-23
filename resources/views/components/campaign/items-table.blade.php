@@ -74,7 +74,6 @@ new class extends Component
 ?>
 
 <div class="space-y-4">
-
     <div class="flex justify-between items-center gap-4">
         <x-select.native wire:model.live="quantity" label="Itens por página">
             <option value="5">5</option>
@@ -89,35 +88,31 @@ new class extends Component
             select="label:label|value:value" />
     </div>
 
-    <x-table :$headers :$rows>
+    <x-table :$headers :$rows paginate>
         @interact('column_item', $row)
             <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
                 {{ $row->name }}
 
-                @if ($row->note)
+                @if ($row->complement)
                     <p class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ $row->note }}</p>
                 @endif
             </div>
         @endinteract
         @interact('column_quantity', $row)
             <div class="space-y-0.5">
-            {{ $row->required_quantity }} {{ $row->unit->abbreviation() }}
-            <x-progress :percent="rand(0, 100)" color="cyan" sm />
-            <div title="Teste">
-            <x-progress :percent="rand(0, 100)" color="green" sm />
-            </div>
+                {{ $row->required_quantity }} {{ $row->unit->abbreviation() }}
+                <x-progress :percent="$row->promised_quantity / $row->required_quantity * 100" color="cyan" sm />
+                <x-progress :percent="$row->received_quantity / $row->required_quantity * 100" color="green" sm />
             </div>
         @endinteract
         @interact('column_date', $row)
             {{ $row->delivery_date ? $row->delivery_date->format('d/m/Y') : 'Padrão' }}
         @endinteract
         @interact('column_actions', $row)
-            <div class="flex gap-2">
-                <x-button icon="pencil-square" title="Editar" sm flat />
-                <x-button icon="list-bullet" title="Promessas de doação" sm flat />
+            <div class="flex">
+                <x-button icon="pencil-square" title="Editar" flat />
+                <x-button icon="list-bullet" title="Promessas de doação" flat />
             </div>
         @endinteract
     </x-table>
-
-    {{-- {{ $this->items->links() }} --}}
 </div>
