@@ -33,4 +33,12 @@
             <x-clipboard :text="$campaign->url" />
         </div>
     </x-card>
+
+    <div class="flex justify-between items-center my-6 gap-4">
+        <h2 class="text-xl font-semibold">Itens da campanha</h2>
+        <livewire:item.create :campaign="$campaign" />
+    </div>
+
+    <livewire:campaign.items-table :campaign="$campaign" />
+
 </div>
