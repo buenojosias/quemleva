@@ -16,8 +16,11 @@ return new class extends Migration
             $table->foreignId('campaign_id')->constrained()->cascadeOnDelete();
             $table->string('category', 40); // Categoria do item (ex: Comidas, Bebidas, Descartáveis, Higiene, Limpeza) - virá de class Enum
             $table->string('name'); // Nome do item necessário
+            $table->string('complement')->nullable(); // Complemento do item (ex: marca, tipo, sabor)
             $table->string('unit', 20); // Unidade de medida (ex: kg, un, l) - virá de class Enum
             $table->integer('required_quantity'); // Quantidade necessária do item
+            $table->integer('promised_quantity')->default(0); // Quantidade prometida do item
+            $table->integer('received_quantity')->default(0); // Quantidade recebida do item
             $table->date('delivery_date')->nullable(); // Data limite para entrega do item específico
             $table->mediumText('note')->nullable(); // Observações adicionais sobre o item
             $table->timestamps();
