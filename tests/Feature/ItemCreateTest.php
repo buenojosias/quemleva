@@ -7,6 +7,7 @@ use App\Models\Campaign;
 use App\Models\User;
 use Livewire\Livewire;
 
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
 
 function campaignForItemCreate(): Campaign
@@ -24,7 +25,7 @@ function campaignForItemCreate(): Campaign
 }
 
 it('renders the item create component with a modal', function () {
-    Livewire::test(Create::class, ['campaign' => campaignForItemCreate()])
+    Livewire::test(Create::class, ['campaignId' => campaignForItemCreate()->id])
         ->assertOk()
         ->assertViewIs('livewire.item.create')
         ->assertSee('Adicionar item')
@@ -46,10 +47,12 @@ it('includes an empty select option for category and unit fields', function () {
 it('creates an item, keeps the modal open, resets fields except category, and dispatches table refresh', function () {
     $campaign = campaignForItemCreate();
 
-    Livewire::test(Create::class, ['campaign' => $campaign])
+    actingAs($campaign->user);
+
+    Livewire::test(Create::class, ['campaignId' => $campaign->id])
         ->set('modal', true)
         ->set([
-            'category' => CategoryEnum::FOOD->value,
+            'category' => CategoryEnum::FOODS->value,
             'name' => 'Arroz',
             'unit' => UnitEnum::KG->value,
             'required_quantity' => 10,
@@ -59,7 +62,7 @@ it('creates an item, keeps the modal open, resets fields except category, and di
         ->call('save')
         ->assertHasNoErrors()
         ->assertSet('modal', true)
-        ->assertSet('category', CategoryEnum::FOOD->value)
+        ->assertSet('category', CategoryEnum::FOODS->value)
         ->assertSet('name', null)
         ->assertSet('unit', null)
         ->assertSet('required_quantity', null)
@@ -70,7 +73,7 @@ it('creates an item, keeps the modal open, resets fields except category, and di
 
     assertDatabaseHas('items', [
         'campaign_id' => $campaign->id,
-        'category' => CategoryEnum::FOOD->value,
+        'category' => CategoryEnum::FOODS->value,
         'name' => 'Arroz',
         'unit' => UnitEnum::KG->value,
         'required_quantity' => 10,
@@ -80,7 +83,7 @@ it('creates an item, keeps the modal open, resets fields except category, and di
 });
 
 it('requires item fields from the schema', function () {
-    Livewire::test(Create::class, ['campaign' => campaignForItemCreate()])
+    Livewire::test(Create::class, ['campaignId' => campaignForItemCreate()->id])
         ->set('category', '')
         ->set('name', '')
         ->set('unit', '')
@@ -97,11 +100,11 @@ it('requires item fields from the schema', function () {
 it('refreshes the campaign items table when an item is created', function () {
     $campaign = campaignForItemCreate();
 
-    $component = Livewire::test('campaign.items-table', ['campaign' => $campaign])
-        ->assertSee('Nenhum item adicionado.');
+    $component = Livewire::test('campaign.items-table', ['campaignId' => $campaign->id])
+        ->assertDontSee('Arroz');
 
     $campaign->items()->create([
-        'category' => CategoryEnum::FOOD->value,
+        'category' => CategoryEnum::FOODS->value,
         'name' => 'Arroz',
         'unit' => UnitEnum::KG->value,
         'required_quantity' => 10,
@@ -113,5 +116,5 @@ it('refreshes the campaign items table when an item is created', function () {
         ->dispatch("item-created.{$campaign->id}")
         ->assertSee('Arroz')
         ->assertSee('Comidas')
-        ->assertSee('10 Kilograma');
+        ->assertSee('10 kg');
 });

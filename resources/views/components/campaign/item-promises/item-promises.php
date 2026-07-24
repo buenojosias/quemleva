@@ -1,11 +1,11 @@
 <?php
 
 use App\Enums\PromiseItemStatusEnum;
-use App\Models\Campaign;
 use App\Models\Item;
 use App\Models\PromiseItem;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use TallStackUi\Traits\Interactions;
@@ -15,35 +15,56 @@ new class () extends Component {
 
     public bool $slide = false;
 
-    public Campaign $campaign;
+    #[Locked]
+    public string $campaignId;
 
-    public ?Item $item = null;
+    public ?int $itemId = null;
 
-    public function mount(Campaign $campaign): void
+    public ?string $itemName = null;
+
+    public int $itemRequiredQuantity = 0;
+
+    public int $itemPromisedQuantity = 0;
+
+    public int $itemReceivedQuantity = 0;
+
+    public ?string $itemUnitLabel = null;
+
+    public function mount(int|string $campaignId): void
     {
-        $this->campaign = $campaign;
+        $this->campaignId = (string) $campaignId;
     }
 
     #[Computed]
     public function promiseItems(): Collection
     {
-        if (! $this->item) {
+        if (! $this->itemId) {
             return collect();
         }
 
         return PromiseItem::query()
             ->with('promise')
-            ->where('item_id', $this->item->id)
-            ->whereHas('promise', fn ($query) => $query->where('campaign_id', $this->campaign->id))
+            ->where('item_id', $this->itemId)
+            ->whereHas('promise', fn ($query) => $query->where('campaign_id', $this->campaignId))
             ->latest()
             ->get();
     }
 
-    // #[On('open-item-promises.{campaign.id}')]
-    #[On('open-item-promises')]
+    #[On('open-item-promises.{campaignId}')]
     public function open(int $item): void
     {
-        $this->item = $this->campaign->items()->findOrFail($item);
+        $selectedItem = Item::query()
+            ->select(['id', 'name', 'unit', 'required_quantity', 'promised_quantity', 'received_quantity'])
+            ->where('campaign_id', $this->campaignId)
+            ->findOrFail($item);
+
+        $this->itemId = $selectedItem->id;
+        $this->itemName = $selectedItem->name;
+        $this->itemRequiredQuantity = $selectedItem->required_quantity;
+        $this->itemPromisedQuantity = $selectedItem->promised_quantity;
+        $this->itemReceivedQuantity = $selectedItem->received_quantity;
+        $this->itemUnitLabel = $selectedItem->unit->label();
+
         $this->slide = true;
 
         unset($this->promiseItems);
@@ -132,19 +153,19 @@ new class () extends Component {
         return PromiseItem::query()
             ->with('promise')
             ->whereKey($promiseItem)
-            ->where('item_id', $this->item?->id)
-            ->whereHas('promise', fn ($query) => $query->where('campaign_id', $this->campaign->id))
+            ->where('item_id', $this->itemId)
+            ->whereHas('promise', fn ($query) => $query->where('campaign_id', $this->campaignId))
             ->firstOrFail();
     }
 
     private function refreshItemQuantities(): void
     {
-        if (! $this->item) {
+        if (! $this->itemId) {
             return;
         }
 
         $promisedQuantity = PromiseItem::query()
-            ->where('item_id', $this->item->id)
+            ->where('item_id', $this->itemId)
             ->whereIn('status', [
                 PromiseItemStatusEnum::PROMISED->value,
                 PromiseItemStatusEnum::RECEIVED->value,
@@ -153,22 +174,26 @@ new class () extends Component {
             ->sum('promised_quantity');
 
         $receivedQuantity = PromiseItem::query()
-            ->where('item_id', $this->item->id)
+            ->where('item_id', $this->itemId)
             ->whereIn('status', [
                 PromiseItemStatusEnum::RECEIVED->value,
                 PromiseItemStatusEnum::DELIVERED->value,
             ])
             ->sum('promised_quantity');
 
-        $this->item->update([
-            'promised_quantity' => $promisedQuantity,
-            'received_quantity' => $receivedQuantity,
-        ]);
+        Item::query()
+            ->where('campaign_id', $this->campaignId)
+            ->whereKey($this->itemId)
+            ->update([
+                'promised_quantity' => $promisedQuantity,
+                'received_quantity' => $receivedQuantity,
+            ]);
 
-        $this->item->refresh();
+        $this->itemPromisedQuantity = $promisedQuantity;
+        $this->itemReceivedQuantity = $receivedQuantity;
 
         unset($this->promiseItems);
 
-        $this->dispatch("item-created.{$this->campaign->id}");
+        $this->dispatch("item-created.{$this->campaignId}");
     }
 };

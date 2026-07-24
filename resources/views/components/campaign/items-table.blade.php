@@ -1,8 +1,9 @@
 <?php
 
 use App\Enums\CategoryEnum;
-use App\Models\Campaign;
+use App\Models\Item;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -14,17 +15,20 @@ new class extends Component
     public int $quantity = 10;
     public string $category = '';
 
-    public Campaign $campaign;
+    #[Locked]
+    public string $campaignId;
 
-    public function mount($campaign): void
+    public function mount(int|string $campaignId): void
     {
-        $this->campaign = $campaign;
+        $this->campaignId = (string) $campaignId;
     }
 
     #[Computed]
     public function items()
     {
-        $query = $this->campaign->items()->orderBy('name');
+        $query = Item::query()
+            ->where('campaign_id', $this->campaignId)
+            ->orderBy('name');
 
         if ($this->category) {
             $query->where('category', $this->category);
@@ -65,7 +69,7 @@ new class extends Component
         ];
     }
 
-    #[On('item-created.{campaign.id}')]
+    #[On('item-created.{campaignId}')]
     public function refreshItems(): void
     {
         unset($this->items);
@@ -112,8 +116,7 @@ new class extends Component
             <div class="flex">
                 <x-button icon="pencil-square" title="Editar" flat />
                 <x-button icon="list-bullet" title="Promessas de doação" flat
-                    {{-- wire:click="$dispatch('open-item-promises.{{ $campaign->id }}', { item: {{ $row->id }} })" /> --}}
-                    wire:click="$dispatch('open-item-promises', { item: {{ $row->id }} })" />
+                    wire:click="$dispatch('open-item-promises.{{ $this->campaignId }}', { item: {{ $row->id }} })" />
             </div>
         @endinteract
     </x-table>

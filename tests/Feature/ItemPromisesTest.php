@@ -56,7 +56,7 @@ it('opens the slide and lists promises for the selected item', function () {
     promiseItemForItemPromises($selectedItem, 'Maria');
     promiseItemForItemPromises($otherItem, 'Jose');
 
-    Livewire::test('campaign.item-promises', ['campaign' => $campaign])
+    Livewire::test('campaign.item-promises', ['campaignId' => $campaign->id])
         ->assertSet('slide', false)
         ->dispatch("open-item-promises.{$campaign->id}", item: $selectedItem->id)
         ->assertSet('slide', true)
@@ -72,7 +72,7 @@ it('confirms a pending promise and updates promised item totals', function () {
     $item = itemForItemPromises($campaign);
     $promiseItem = promiseItemForItemPromises($item, 'Maria');
 
-    Livewire::test('campaign.item-promises', ['campaign' => $campaign])
+    Livewire::test('campaign.item-promises', ['campaignId' => $campaign->id])
         ->dispatch("open-item-promises.{$campaign->id}", item: $item->id)
         ->call('confirm', $promiseItem->id)
         ->assertDispatched("item-created.{$campaign->id}");
@@ -88,7 +88,7 @@ it('marks a promise as received and updates received item totals', function () {
     $item = itemForItemPromises($campaign);
     $promiseItem = promiseItemForItemPromises($item, 'Maria', PromiseItemStatusEnum::PROMISED);
 
-    Livewire::test('campaign.item-promises', ['campaign' => $campaign])
+    Livewire::test('campaign.item-promises', ['campaignId' => $campaign->id])
         ->dispatch("open-item-promises.{$campaign->id}", item: $item->id)
         ->call('receive', $promiseItem->id)
         ->assertDispatched("item-created.{$campaign->id}");
@@ -104,7 +104,7 @@ it('deletes a promise item and removes an empty promise', function () {
     $promiseItem = promiseItemForItemPromises($item, 'Maria', PromiseItemStatusEnum::PROMISED);
     $promise = $promiseItem->promise;
 
-    Livewire::test('campaign.item-promises', ['campaign' => $campaign])
+    Livewire::test('campaign.item-promises', ['campaignId' => $campaign->id])
         ->dispatch("open-item-promises.{$campaign->id}", item: $item->id)
         ->call('delete', $promiseItem->id)
         ->assertDispatched("item-created.{$campaign->id}");

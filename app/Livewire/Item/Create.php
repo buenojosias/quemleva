@@ -7,11 +7,13 @@ use App\Enums\UnitEnum;
 use App\Models\Campaign;
 use Illuminate\Contracts\View\View;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class Create extends Component
 {
-    public Campaign $campaign;
+    #[Locked]
+    public string $campaignId;
 
     public bool $modal = false;
 
@@ -29,6 +31,13 @@ class Create extends Component
     public ?string $note = null;
 
     public ?string $successMessage = null;
+
+    public function mount(Campaign|int|string $campaignId): void
+    {
+        $this->campaignId = $campaignId instanceof Campaign
+            ? (string) $campaignId->getKey()
+            : (string) $campaignId;
+    }
 
     public function render(): View
     {
@@ -120,7 +129,11 @@ class Create extends Component
 
         $validated = $this->validate();
 
-        $this->campaign->items()->create($validated);
+        $campaign = Campaign::query()
+            ->where('user_id', auth()->id())
+            ->findOrFail($this->campaignId);
+
+        $campaign->items()->create($validated);
 
         $this->reset([
             'name',
@@ -133,6 +146,6 @@ class Create extends Component
 
         $this->successMessage = 'Item adicionado com sucesso!';
 
-        $this->dispatch("item-created.{$this->campaign->id}");
+        $this->dispatch("item-created.{$this->campaignId}");
     }
 }

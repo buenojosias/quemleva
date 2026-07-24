@@ -3,22 +3,38 @@
 namespace App\Livewire\Campaign;
 
 use App\Models\Campaign;
+use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class Show extends Component
 {
-    public $campaign;
+    #[Locked]
+    public string $campaignId;
 
-    public function mount($campaign)
+    public function mount(Campaign|int|string $campaign): void
     {
-        $this->campaign = Campaign::query()
-            ->with(['user', 'items'])
-            ->where('user_id', auth()->id())
-            ->findOrFail($campaign);
-        $this->campaign->url = route('campaigns.show', $this->campaign);
+        $this->campaignId = $campaign instanceof Campaign
+            ? (string) $campaign->getKey()
+            : (string) $campaign;
     }
 
-    public function render()
+    #[Computed]
+    public function campaign(): Campaign
+    {
+        return Campaign::query()
+            ->where('user_id', auth()->id())
+            ->findOrFail($this->campaignId);
+    }
+
+    #[Computed]
+    public function campaignUrl(): string
+    {
+        return route('campaigns.show', $this->campaign);
+    }
+
+    public function render(): View
     {
         return view('livewire.campaign.show');
     }

@@ -1,25 +1,25 @@
 <div>
     <x-slide wire title="Promessas de doação" size="2xl">
         <div class="space-y-5">
-            @if ($item)
+            @if ($itemName)
                 <div class="space-y-1">
                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Item selecionado</p>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $item->name }}</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $itemName }}</h3>
                 </div>
-                
+
                 {{-- <x-label label="Quantidade solicitada" />
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ $item->quantity }}</p> --}}
 
                 <div class="my-6 flex gap-4">
                     <div class="w-1/2 flex flex-col items-center">
                         <x-label label="Quantidade prometida" />
-                        <x-label :label="$item->promised_quantity . '/' . $item->required_quantity . ' ' . $item->unit->label()" />
-                        <x-progress.circle :percent="$item->promised_quantity / $item->required_quantity * 100" color="cyan" />
+                        <x-label :label="$itemPromisedQuantity . '/' . $itemRequiredQuantity . ' ' . $itemUnitLabel" />
+                        <x-progress.circle :percent="$itemPromisedQuantity / $itemRequiredQuantity * 100" color="cyan" />
                     </div>
                     <div class="w-1/2 flex flex-col items-center">
                         <x-label label="Quantidade recebida" />
-                        <x-label :label="$item->received_quantity . '/' . $item->required_quantity . ' ' . $item->unit->label()" />
-                        <x-progress.circle :percent="$item->received_quantity / $item->required_quantity * 100" color="green" />
+                        <x-label :label="$itemReceivedQuantity . '/' . $itemRequiredQuantity . ' ' . $itemUnitLabel" />
+                        <x-progress.circle :percent="$itemReceivedQuantity / $itemRequiredQuantity * 100" color="green" />
                     </div>
                 </div>
             @endif
