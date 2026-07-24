@@ -16,6 +16,7 @@ class PromiseSeeder extends Seeder
         $campaigns = Campaign::with('items')->limit(1)->get();
 
         foreach ($campaigns as $campaign) {
+            $items = $campaign->items;
             $promises = $campaign->promises()->createMany([
                 [
                     'user_id' => 1,
@@ -35,15 +36,17 @@ class PromiseSeeder extends Seeder
                 ],
             ]);
 
-            // $promises = \App\Models\Promise::all(); // apagar depois
-
             foreach ($promises as $promise) {
-                $randomItems = $campaign->items->random(3);
+                $randomItems = $items->random(3);
                 foreach ($randomItems as $item) {
+                    $promised_quantity = rand(1, $item->required_quantity);
                     $promise->items()->create([
                         'item_id' => $item->id,
-                        'promised_quantity' => rand(1, $item->required_quantity),
+                        'promised_quantity' => $promised_quantity,
                         'status' => $promise->confirmed_at ? 'promised' : 'pending',
+                    ]);
+                    $item->update([
+                        'promised_quantity' => $item->promised_quantity + $promised_quantity,
                     ]);
                 }
             }
