@@ -24,7 +24,7 @@ new class extends Component
     #[Computed]
     public function items()
     {
-        $query = $this->campaign->items();
+        $query = $this->campaign->items()->orderBy('name');
 
         if ($this->category) {
             $query->where('category', $this->category);
@@ -111,7 +111,9 @@ new class extends Component
         @interact('column_actions', $row)
             <div class="flex">
                 <x-button icon="pencil-square" title="Editar" flat />
-                <x-button icon="list-bullet" title="Promessas de doação" id="open-promises" flat />
+                <x-button icon="list-bullet" title="Promessas de doação" flat
+                    {{-- wire:click="$dispatch('open-item-promises.{{ $campaign->id }}', { item: {{ $row->id }} })" /> --}}
+                    wire:click="$dispatch('open-item-promises', { item: {{ $row->id }} })" />
             </div>
         @endinteract
     </x-table>

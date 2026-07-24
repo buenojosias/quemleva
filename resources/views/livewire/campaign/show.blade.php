@@ -36,10 +36,16 @@
 
     <div class="flex justify-between items-center my-6 gap-4">
         <h2 class="text-xl font-semibold dark:text-gray-300">Itens</h2>
-        <livewire:item.create :campaign="$campaign" />
+        @island('item-create')
+            <livewire:item.create :campaign="$campaign" />
+        @endisland
     </div>
 
-    <livewire:campaign.items-table :campaign="$campaign" />
-    <livewire:campaign.item-promises />
+    @island('items-table')
+        <livewire:campaign.items-table :campaign="$campaign" />
+    @endisland
+    @island('item-promises')
+        <livewire:campaign.item-promises :campaign="$campaign" />
+    @endisland
 
 </div>

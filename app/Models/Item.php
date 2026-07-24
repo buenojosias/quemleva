@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Item extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'campaign_id',
         'category',
@@ -20,6 +20,8 @@ class Item extends Model
         'complement',
         'unit',
         'required_quantity',
+        'promised_quantity',
+        'received_quantity',
         'delivery_date',
         'note',
     ];
@@ -30,6 +32,8 @@ class Item extends Model
             'category' => CategoryEnum::class,
             'unit' => UnitEnum::class,
             'required_quantity' => 'integer',
+            'promised_quantity' => 'integer',
+            'received_quantity' => 'integer',
             'delivery_date' => 'date',
         ];
     }

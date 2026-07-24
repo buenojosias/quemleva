@@ -1,5 +1,74 @@
 <div>
-    <x-slide wire>
-        
+    <x-slide wire title="Promessas de doação" size="2xl">
+        <div class="space-y-5">
+            @if ($item)
+                <div class="space-y-1">
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Item selecionado</p>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $item->name }}</h3>
+                </div>
+                
+                {{-- <x-label label="Quantidade solicitada" />
+                <p class="text-sm text-gray-500 dark:text-gray-400">{{ $item->quantity }}</p> --}}
+
+                <div class="my-6 flex gap-4">
+                    <div class="w-1/2 flex flex-col items-center">
+                        <x-label label="Quantidade prometida" />
+                        <x-label :label="$item->promised_quantity . '/' . $item->required_quantity . ' ' . $item->unit->label()" />
+                        <x-progress.circle :percent="$item->promised_quantity / $item->required_quantity * 100" color="cyan" />
+                    </div>
+                    <div class="w-1/2 flex flex-col items-center">
+                        <x-label label="Quantidade recebida" />
+                        <x-label :label="$item->received_quantity . '/' . $item->required_quantity . ' ' . $item->unit->label()" />
+                        <x-progress.circle :percent="$item->received_quantity / $item->required_quantity * 100" color="green" />
+                    </div>
+                </div>
+            @endif
+
+
+            <x-table :headers="[
+                ['index' => 'donor', 'label' => 'Doador'],
+                ['index' => 'promised_quantity', 'label' => 'Quantidade'],
+                ['index' => 'status', 'label' => 'Status'],
+                ['index' => 'actions'],
+            ]"
+                :rows="$this->promiseItems"
+                loading>
+                @interact('column_donor', $row)
+                    <span class="font-medium text-gray-900 dark:text-gray-100">
+                        {{ $row->promise->donor_name }}
+                    </span>
+                @endinteract
+
+                @interact('column_promised_quantity', $row)
+                    {{ $row->promised_quantity }}
+                @endinteract
+
+                @interact('column_status', $row)
+                    <x-badge :text="$this->statusLabel($row)" :color="$this->statusColor($row)" light />
+                @endinteract
+
+                @interact('column_actions', $row)
+                    <div class="flex flex-wrap justify-end gap-1" wire:key="promise-item-actions-{{ $row->id }}">
+                        @if ($row->status === \App\Enums\PromiseItemStatusEnum::PENDING)
+                            <x-button icon="check" text="Confirmar" color="cyan" xs flat
+                                wire:click="confirm({{ $row->id }})"
+                                loading="confirm({{ $row->id }})" />
+                        @endif
+
+                        <x-button icon="archive-box-arrow-down" text="Recebido" color="green" xs flat
+                            wire:click="receive({{ $row->id }})"
+                            loading="receive({{ $row->id }})" />
+
+                        <x-button icon="trash" text="Excluir" color="red" xs flat
+                            wire:click="askToDelete({{ $row->id }})"
+                            loading="askToDelete({{ $row->id }})" />
+                    </div>
+                @endinteract
+
+                <x-slot:empty>
+                    Nenhuma promessa encontrada para este item.
+                </x-slot:empty>
+            </x-table>
+        </div>
     </x-slide>
 </div>
