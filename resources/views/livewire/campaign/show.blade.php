@@ -40,5 +40,6 @@
     </div>
 
     <livewire:campaign.items-table :campaign="$campaign" />
+    <livewire:campaign.item-promises />
 
 </div>
