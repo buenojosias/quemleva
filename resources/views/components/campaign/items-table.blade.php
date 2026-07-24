@@ -111,7 +111,7 @@ new class extends Component
         @interact('column_actions', $row)
             <div class="flex">
                 <x-button icon="pencil-square" title="Editar" flat />
-                <x-button icon="list-bullet" title="Promessas de doação" flat />
+                <x-button icon="list-bullet" title="Promessas de doação" id="open-promises" flat />
             </div>
         @endinteract
     </x-table>
